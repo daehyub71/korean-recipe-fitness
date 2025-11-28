@@ -17,7 +17,8 @@ class LLMFallbackAgent:
     """
 
     def __init__(self):
-        self.llm_service = get_llm_service()
+        # LLM 서비스는 process()에서 매번 새로 가져옴
+        pass
 
     def process(self, state: ChatState) -> ChatState:
         """
@@ -30,12 +31,9 @@ class LLMFallbackAgent:
             recipe, nutrition이 업데이트된 ChatState
         """
         recipe_source = state.get("recipe_source", "database")
+        logger.info(f"LLM Fallback 진입 - recipe_source: {recipe_source}")
 
-        # DB에서 찾은 경우 스킵
-        if recipe_source == "database":
-            logger.debug("DB 레시피 사용, fallback 스킵")
-            return state
-
+        # DB에서 찾은 경우에도 영양정보가 없으면 LLM으로 생성 시도
         analyzed_query = state.get("analyzed_query", {})
         food_name = analyzed_query.get("food_name", "")
         servings = analyzed_query.get("servings", 1)
@@ -44,12 +42,20 @@ class LLMFallbackAgent:
             logger.warning("음식명이 없어 LLM fallback 불가")
             return state
 
+        # 매번 새로운 LLM 서비스 인스턴스 가져오기
+        llm_service = get_llm_service()
+        logger.info(f"LLM 서비스 상태: is_ready={llm_service.is_ready}")
+
+        if not llm_service.is_ready:
+            logger.error("LLM 서비스가 준비되지 않았습니다!")
+            return state
+
         logger.info(f"LLM Fallback 시작: {food_name}")
 
-        # 레시피 생성
+        # 레시피 생성 (recipe_source가 llm_fallback인 경우만)
         recipe = state.get("recipe", {})
-        if not recipe.get("ingredients") and not recipe.get("instructions"):
-            generated_recipe = self.llm_service.generate_recipe(food_name, servings)
+        if recipe_source == "llm_fallback" and not recipe.get("ingredients") and not recipe.get("instructions"):
+            generated_recipe = llm_service.generate_recipe(food_name, servings)
             if generated_recipe:
                 # 기존 이미지 URL 보존 (recipe_fetcher에서 설정한 fallback 이미지)
                 existing_image_url = recipe.get("image_url", "") if recipe else ""
@@ -65,10 +71,11 @@ class LLMFallbackAgent:
                 )
                 logger.info("레시피 생성 완료")
 
-        # 영양정보 생성 (영양정보가 없는 경우)
+        # 영양정보 생성 (영양정보가 없는 경우 - DB/LLM 상관없이)
         nutrition = state.get("nutrition", {})
         if nutrition.get("calories", 0) <= 0:
-            generated_nutrition = self.llm_service.generate_nutrition(food_name, servings)
+            logger.info(f"영양정보 없음, GPT로 생성 시도: {food_name}")
+            generated_nutrition = llm_service.generate_nutrition(food_name, servings)
             if generated_nutrition:
                 state["nutrition"] = NutritionInfo(
                     food_name=food_name,
