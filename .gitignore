@@ -40,10 +40,12 @@ env/
 
 # Data (large files)
 data/raw/*.json
-data/processed/*.json
-data/vector_db/*.index
-data/vector_db/*.json
+data/processed/nutrition.json
 data/database/*.db
+
+# Keep these files for Streamlit Cloud (small enough)
+# data/processed/recipes.json (~2MB) - INCLUDED
+# data/vector_db/* (~7MB) - INCLUDED
 
 # Logs
 *.log
