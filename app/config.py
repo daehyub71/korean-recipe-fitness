@@ -1,20 +1,39 @@
 """Application configuration using pydantic-settings."""
 
+import os
 from pydantic_settings import BaseSettings
 from pydantic import Field
 from functools import lru_cache
+
+
+def _load_streamlit_secrets():
+    """Streamlit secrets를 환경변수로 로드"""
+    try:
+        import streamlit as st
+        if hasattr(st, 'secrets') and len(st.secrets) > 0:
+            for key, value in st.secrets.items():
+                if key not in os.environ:
+                    os.environ[key] = str(value)
+            return True
+    except Exception:
+        pass
+    return False
+
+
+# Streamlit Cloud 환경이면 secrets 로드
+_load_streamlit_secrets()
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # OpenAI API
-    openai_api_key: str = Field(..., alias="OPENAI_API_KEY")
+    openai_api_key: str = Field(default="", alias="OPENAI_API_KEY")
     openai_model: str = Field(default="gpt-4o-mini", alias="OPENAI_MODEL")
 
     # 공공데이터포털 API
-    recipe_api_key: str = Field(..., alias="RECIPE_API_KEY")
-    nutrition_api_key: str = Field(..., alias="NUTRITION_API_KEY")
+    recipe_api_key: str = Field(default="", alias="RECIPE_API_KEY")
+    nutrition_api_key: str = Field(default="", alias="NUTRITION_API_KEY")
 
     # App Config
     app_env: str = Field(default="development", alias="APP_ENV")
