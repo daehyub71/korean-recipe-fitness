@@ -113,7 +113,7 @@ streamlit run streamlit_app/test_day1_config.py
   - [x] 페이지네이션 처리
   - [x] JSON 파일 저장 (`data/raw/recipes_raw.json`)
   - [x] 에러 핸들링 (재시도 로직)
-- [ ] 레시피 데이터 수집 실행
+- [x] 레시피 데이터 수집 실행 (1,139개 레시피)
 
 #### Streamlit 테스트 1.4-A (레시피 API)
 ```bash
@@ -121,8 +121,8 @@ streamlit run streamlit_app/test_day1_config.py
 streamlit run streamlit_app/test_day1_recipe_api.py
 ```
 - [x] 레시피 API 연결 상태 표시
-- [ ] 샘플 레시피 5개 표시
-- [ ] 수집된 레시피 총 개수 표시
+- [x] 샘플 레시피 5개 표시
+- [x] 수집된 레시피 총 개수 표시 (1,139개)
 
 ---
 
@@ -134,7 +134,7 @@ streamlit run streamlit_app/test_day1_recipe_api.py
   - [x] 페이지네이션 처리
   - [x] JSON 파일 저장 (`data/raw/nutrition_raw.json`)
   - [x] 에러 핸들링 (재시도 로직)
-- [ ] 영양정보 데이터 수집 실행
+- [x] 영양정보 데이터 수집 실행 (167,337개)
 
 #### Streamlit 테스트 1.4-B (영양정보 API)
 ```bash
@@ -142,9 +142,9 @@ streamlit run streamlit_app/test_day1_recipe_api.py
 streamlit run streamlit_app/test_day1_nutrition_api.py
 ```
 - [x] 영양정보 API 연결 상태 표시
-- [ ] 샘플 영양정보 5개 표시
-- [ ] 수집된 영양정보 총 개수 표시
-- [ ] 레시피와 영양정보 매칭 테스트 (음식명 기준)
+- [x] 샘플 영양정보 5개 표시
+- [x] 수집된 영양정보 총 개수 표시 (167,337개)
+- [x] 레시피와 영양정보 매칭 테스트 (음식명 기준)
 
 ---
 
@@ -154,7 +154,11 @@ streamlit run streamlit_app/test_day1_nutrition_api.py
   - [x] 필드 정규화 (음식명, 재료, 조리법)
   - [x] 빈 값 처리
   - [x] `data/processed/recipes.json` 저장
-- [ ] 데이터 정제 실행
+- [x] `scripts/process_nutrition.py` 작성
+  - [x] 필드 매핑 (AMT_NUM1 → calories 등)
+  - [x] 중복 제거, 유효성 검증
+  - [x] `data/processed/nutrition.json` 저장
+- [x] 데이터 정제 실행 (레시피: 1,139개, 영양정보: 167,337개)
 
 #### Streamlit 테스트 1.5
 ```bash
@@ -171,8 +175,9 @@ streamlit run streamlit_app/test_day1_data.py
 ### Day 1 체크포인트
 - [x] 프로젝트 구조 완성
 - [x] 환경 설정 완료
-- [ ] 레시피 데이터 수집 완료 (최소 500개 이상)
-- [ ] 데이터 정제 완료
+- [x] 레시피 데이터 수집 완료 (1,139개)
+- [x] 영양정보 데이터 수집 완료 (167,337개)
+- [x] 데이터 정제 완료
 - [ ] Git 커밋 (`Day 1 완료: 프로젝트 셋업 및 데이터 수집`)
 
 ---
@@ -180,12 +185,13 @@ streamlit run streamlit_app/test_day1_data.py
 ## Day 2: 벡터 DB & 영양정보 DB 구축
 
 ### 2.1 임베딩 서비스 구현
-- [ ] `app/core/services/embedding_service.py` 작성
-  - [ ] `EmbeddingService` 클래스 생성
-  - [ ] `__init__`: OpenAI 클라이언트 초기화
-  - [ ] `get_embedding(text)`: 단일 텍스트 임베딩
-  - [ ] `get_embeddings_batch(texts)`: 배치 임베딩 (100개씩)
-  - [ ] 에러 핸들링 및 재시도 로직
+- [x] `app/core/services/embedding_service.py` 작성
+  - [x] `EmbeddingService` 클래스 생성
+  - [x] `__init__`: OpenAI 클라이언트 초기화
+  - [x] `get_embedding(text)`: 단일 텍스트 임베딩
+  - [x] `get_embeddings_batch(texts)`: 배치 임베딩 (100개씩)
+  - [x] 에러 핸들링 및 재시도 로직
+  - [x] `compute_similarity()`: 코사인 유사도 계산
 
 #### Streamlit 테스트 2.1
 ```bash
@@ -193,21 +199,21 @@ streamlit run streamlit_app/test_day1_data.py
 # 임베딩 서비스 테스트
 streamlit run streamlit_app/test_day2_embedding.py
 ```
-- [ ] 테스트 문장 입력 → 임베딩 벡터 생성
-- [ ] 벡터 차원 표시 (3072)
+- [ ] 테스트 문장 입력 → 임베딩 벡터 생성 (OPENAI_API_KEY 필요)
+- [ ] 벡터 차원 표시 (1536 for small, 3072 for large)
 - [ ] 두 문장 유사도 계산 테스트
 
 ---
 
 ### 2.2 FAISS 벡터 DB 빌드
-- [ ] `scripts/build_vector_db.py` 작성
-  - [ ] 레시피 데이터 로드
-  - [ ] 임베딩 텍스트 생성 (음식명 + 재료 + 카테고리)
-  - [ ] 배치 임베딩 생성
-  - [ ] FAISS IndexFlatL2 생성
-  - [ ] 인덱스 저장 (`data/vector_db/faiss.index`)
-  - [ ] 메타데이터 저장 (`data/vector_db/metadata.json`)
-- [ ] 벡터 DB 빌드 실행
+- [x] `scripts/build_vector_db.py` 작성
+  - [x] 레시피 데이터 로드
+  - [x] 임베딩 텍스트 생성 (음식명 + 재료 + 카테고리)
+  - [x] 배치 임베딩 생성
+  - [x] FAISS IndexFlatL2 생성
+  - [x] 인덱스 저장 (`data/vector_db/faiss.index`)
+  - [x] 메타데이터 저장 (`data/vector_db/metadata.json`)
+- [ ] 벡터 DB 빌드 실행 (**OPENAI_API_KEY 설정 필요**)
 
 #### Streamlit 테스트 2.2
 ```bash
@@ -223,11 +229,14 @@ streamlit run streamlit_app/test_day2_faiss.py
 ---
 
 ### 2.3 벡터 DB 서비스 구현
-- [ ] `app/core/services/vector_db_service.py` 작성
-  - [ ] `VectorDBService` 클래스 생성
-  - [ ] `__init__`: FAISS 인덱스 및 메타데이터 로드
-  - [ ] `search(query, top_k=3)`: 유사 레시피 검색
-  - [ ] `get_recipe_by_index(idx)`: 인덱스로 레시피 조회
+- [x] `app/core/services/vector_db_service.py` 작성
+  - [x] `VectorDBService` 클래스 생성
+  - [x] `__init__`: FAISS 인덱스 및 메타데이터 로드
+  - [x] `search(query, top_k=3)`: 유사 레시피 검색
+  - [x] `get_recipe_by_index(idx)`: 인덱스로 레시피 조회
+  - [x] `get_recipe_by_name(name)`: 이름으로 레시피 조회
+  - [x] `search_by_category(category)`: 카테고리 검색
+  - [x] `get_similar_recipes(idx)`: 유사 레시피 검색
 
 #### Streamlit 테스트 2.3
 ```bash
@@ -242,25 +251,43 @@ streamlit run streamlit_app/test_day2_search.py
 ---
 
 ### 2.4 영양정보 SQLite DB 구축
-- [ ] `scripts/build_nutrition_db.py` 작성
-  - [ ] 공공데이터 API 호출 (식품영양성분 DB)
-  - [ ] SQLite 테이블 생성
+- [x] `scripts/build_nutrition_db.py` 작성
+  - [x] 정제된 영양정보 데이터 로드
+  - [x] SQLite 테이블 생성 (확장된 스키마)
     ```sql
     CREATE TABLE nutrition (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        food_code TEXT,
         food_name TEXT NOT NULL,
-        serving_size_g REAL,
+        db_group TEXT,
+        db_class TEXT,
+        food_origin TEXT,
+        category1 TEXT,
+        category2 TEXT,
+        serving_size REAL,
         calories REAL,
-        carbohydrate REAL,
+        water REAL,
         protein REAL,
         fat REAL,
+        ash REAL,
+        carbohydrate REAL,
+        sugar REAL,
+        fiber REAL,
+        calcium REAL,
+        iron REAL,
+        phosphorus REAL,
         sodium REAL,
-        sugar REAL
+        potassium REAL,
+        vitamin_a REAL,
+        vitamin_c REAL,
+        cholesterol REAL,
+        saturated_fat REAL,
+        trans_fat REAL
     );
     ```
-  - [ ] 데이터 삽입
-  - [ ] 인덱스 생성 (`idx_food_name`)
-- [ ] 영양정보 DB 빌드 실행
+  - [x] 데이터 삽입 (배치 처리)
+  - [x] 인덱스 생성 (`idx_food_name`, `idx_food_code`, `idx_category1`, `idx_db_group`)
+- [x] 영양정보 DB 빌드 실행 (167,337개 레코드)
 
 #### Streamlit 테스트 2.4
 ```bash
@@ -268,19 +295,24 @@ streamlit run streamlit_app/test_day2_search.py
 # 영양정보 DB 테스트
 streamlit run streamlit_app/test_day2_nutrition.py
 ```
-- [ ] DB 연결 상태 표시
-- [ ] 총 레코드 수 표시
-- [ ] 음식명 검색 → 영양정보 테이블 표시
-- [ ] 칼로리 분포 히스토그램
+- [x] DB 연결 상태 표시
+- [x] 총 레코드 수 표시 (167,337개)
+- [x] 음식명 검색 → 영양정보 테이블 표시
+- [x] 칼로리 분포 히스토그램
 
 ---
 
 ### 2.5 영양정보 서비스 구현
-- [ ] `app/core/services/nutrition_db_service.py` 작성
-  - [ ] `NutritionDBService` 클래스 생성
-  - [ ] `__init__`: SQLite 연결
-  - [ ] `get_nutrition(food_name)`: 영양정보 조회
-  - [ ] `search_similar(food_name)`: 유사 음식 검색 (LIKE 쿼리)
+- [x] `app/core/services/nutrition_db_service.py` 작성
+  - [x] `NutritionDBService` 클래스 생성
+  - [x] `__init__`: SQLite 연결
+  - [x] `get_nutrition(food_name)`: 영양정보 조회
+  - [x] `search_similar(food_name)`: 유사 음식 검색 (LIKE 쿼리)
+  - [x] `search_by_category(category)`: 카테고리 검색
+  - [x] `get_by_calorie_range(min, max)`: 칼로리 범위 검색
+  - [x] `get_low_calorie_foods()`: 저칼로리 음식 조회
+  - [x] `get_high_protein_foods()`: 고단백 음식 조회
+  - [x] `get_statistics()`: 통계 조회
 
 #### Streamlit 테스트 2.5
 ```bash
@@ -295,11 +327,11 @@ streamlit run streamlit_app/test_day2_nutrition_service.py
 ---
 
 ### Day 2 체크포인트
-- [ ] 임베딩 서비스 완성
-- [ ] FAISS 벡터 DB 빌드 완료
-- [ ] 벡터 검색 서비스 완성
-- [ ] 영양정보 SQLite DB 빌드 완료
-- [ ] 영양정보 서비스 완성
+- [x] 임베딩 서비스 완성
+- [ ] FAISS 벡터 DB 빌드 완료 (**OPENAI_API_KEY 설정 후 실행 필요**)
+- [x] 벡터 검색 서비스 완성 (코드 완료)
+- [x] 영양정보 SQLite DB 빌드 완료 (167,337개)
+- [x] 영양정보 서비스 완성
 - [ ] Git 커밋 (`Day 2 완료: 벡터 DB 및 영양정보 DB 구축`)
 
 ---
@@ -307,9 +339,9 @@ streamlit run streamlit_app/test_day2_nutrition_service.py
 ## Day 3: LangGraph 워크플로우 & Agent 구현
 
 ### 3.1 ChatState 정의
-- [ ] `app/core/workflow/state.py` 작성
-  - [ ] `UserProfile` TypedDict 정의
-  - [ ] `ChatState` TypedDict 정의
+- [x] `app/core/workflow/state.py` 작성
+  - [x] `UserProfile` TypedDict 정의
+  - [x] `ChatState` TypedDict 정의
     ```python
     class ChatState(TypedDict):
         user_query: str
@@ -334,12 +366,12 @@ streamlit run streamlit_app/test_day3_state.py
 ---
 
 ### 3.2 Agent 1: QueryAnalyzer
-- [ ] `app/core/agents/query_analyzer.py` 작성
-  - [ ] GPT 프롬프트 설계
+- [x] `app/core/agents/query_analyzer.py` 작성
+  - [x] GPT 프롬프트 설계
     - 음식명 추출
     - 인분 수 추출 (기본값: 1)
-  - [ ] `analyze(state: ChatState) -> ChatState` 함수 구현
-  - [ ] JSON 파싱 로직
+  - [x] `analyze(state: ChatState) -> ChatState` 함수 구현
+  - [x] JSON 파싱 로직
 
 #### Streamlit 테스트 3.2
 ```bash
@@ -356,11 +388,11 @@ streamlit run streamlit_app/test_day3_query_analyzer.py
 ---
 
 ### 3.3 Agent 2: RecipeFetcher
-- [ ] `app/core/agents/recipe_fetcher.py` 작성
-  - [ ] VectorDBService 연동
-  - [ ] 유사도 threshold 처리 (0.7)
-  - [ ] `fetch(state: ChatState) -> ChatState` 함수 구현
-  - [ ] `recipe_source` 설정 ("database" or "llm_fallback")
+- [x] `app/core/agents/recipe_fetcher.py` 작성
+  - [x] VectorDBService 연동
+  - [x] 유사도 threshold 처리 (0.5)
+  - [x] `fetch(state: ChatState) -> ChatState` 함수 구현
+  - [x] `recipe_source` 설정 ("database" or "llm_fallback")
 
 #### Streamlit 테스트 3.3
 ```bash
@@ -375,10 +407,10 @@ streamlit run streamlit_app/test_day3_recipe_fetcher.py
 ---
 
 ### 3.4 Agent 3: NutritionCalculator
-- [ ] `app/core/agents/nutrition_calculator.py` 작성
-  - [ ] NutritionDBService 연동
-  - [ ] 인분 수 반영 계산
-  - [ ] `calculate(state: ChatState) -> ChatState` 함수 구현
+- [x] `app/core/agents/nutrition_calculator.py` 작성
+  - [x] NutritionDBService 연동
+  - [x] 인분 수 반영 계산
+  - [x] `calculate(state: ChatState) -> ChatState` 함수 구현
 
 #### Streamlit 테스트 3.4
 ```bash
@@ -392,14 +424,14 @@ streamlit run streamlit_app/test_day3_nutrition_calc.py
 ---
 
 ### 3.5 CalorieCalculator 서비스
-- [ ] `app/core/services/calorie_calculator.py` 작성
-  - [ ] `UserProfile` dataclass
-  - [ ] `CalorieCalculator` 클래스
-    - [ ] `_calculate_bmr()`: Mifflin-St Jeor 공식
-    - [ ] `_get_epoc_factor()`: EPOC 계수
-    - [ ] `calculate_time_for_calories()`: 운동 시간 계산
-    - [ ] `recommend_exercises()`: 강도별 운동 추천
-  - [ ] MET 테이블 정의 (30개 이상)
+- [x] `app/core/services/calorie_calculator.py` 작성
+  - [x] `UserProfile` dataclass
+  - [x] `CalorieCalculator` 클래스
+    - [x] `calculate_bmr()`: Mifflin-St Jeor 공식
+    - [x] `_get_epoc_factor()`: EPOC 계수
+    - [x] `calculate_time_for_calories()`: 운동 시간 계산
+    - [x] `recommend_exercises()`: 강도별 운동 추천
+  - [x] MET 테이블 정의 (38개 운동)
 
 #### Streamlit 테스트 3.5
 ```bash
@@ -415,10 +447,10 @@ streamlit run streamlit_app/test_day3_calorie_calc.py
 ---
 
 ### 3.6 Agent 4: ExerciseRecommender
-- [ ] `app/core/agents/exercise_recommender.py` 작성
-  - [ ] CalorieCalculator 연동
-  - [ ] 사용자 프로필 처리 (없으면 기본값)
-  - [ ] `recommend(state: ChatState) -> ChatState` 함수 구현
+- [x] `app/core/agents/exercise_recommender.py` 작성
+  - [x] CalorieCalculator 연동
+  - [x] 사용자 프로필 처리 (없으면 기본값)
+  - [x] `recommend(state: ChatState) -> ChatState` 함수 구현
 
 #### Streamlit 테스트 3.6
 ```bash
@@ -432,10 +464,11 @@ streamlit run streamlit_app/test_day3_exercise.py
 ---
 
 ### 3.7 Agent 5: ResponseFormatter
-- [ ] `app/core/agents/response_formatter.py` 작성
-  - [ ] GPT 프롬프트 설계 (자연어 응답 생성)
-  - [ ] 레시피 + 영양정보 + 운동 추천 통합
-  - [ ] `format(state: ChatState) -> ChatState` 함수 구현
+- [x] `app/core/agents/response_formatter.py` 작성
+  - [x] GPT 프롬프트 설계 (자연어 응답 생성)
+  - [x] 레시피 + 영양정보 + 운동 추천 통합
+  - [x] `format(state: ChatState) -> ChatState` 함수 구현
+  - [x] 템플릿 기반 fallback 응답 생성
 
 #### Streamlit 테스트 3.7
 ```bash
@@ -449,11 +482,13 @@ streamlit run streamlit_app/test_day3_formatter.py
 ---
 
 ### 3.8 LLM Fallback 로직
-- [ ] `app/core/services/llm_service.py` 작성
-  - [ ] `LLMService` 클래스
-  - [ ] `generate_recipe(food_name)`: GPT로 레시피 생성
-  - [ ] `generate_nutrition(food_name)`: GPT로 영양정보 추정
-- [ ] RecipeFetcher에 fallback 로직 연결
+- [x] `app/core/services/llm_service.py` 작성
+  - [x] `LLMService` 클래스
+  - [x] `generate_recipe(food_name)`: GPT로 레시피 생성
+  - [x] `generate_nutrition(food_name)`: GPT로 영양정보 추정
+- [x] `app/core/agents/llm_fallback.py` 작성
+  - [x] LLMFallbackAgent 클래스
+  - [x] RecipeFetcher와 연동
 
 #### Streamlit 테스트 3.8
 ```bash
@@ -467,11 +502,12 @@ streamlit run streamlit_app/test_day3_fallback.py
 ---
 
 ### 3.9 LangGraph 워크플로우 연결
-- [ ] `app/core/workflow/graph.py` 작성
-  - [ ] StateGraph 생성
-  - [ ] 노드 추가 (5개 Agent)
-  - [ ] 엣지 연결 (순차)
-  - [ ] 컴파일
+- [x] `app/core/workflow/graph.py` 작성
+  - [x] StateGraph 생성
+  - [x] 노드 추가 (6개 Agent: QueryAnalyzer, RecipeFetcher, LLMFallback, NutritionCalculator, ExerciseRecommender, ResponseFormatter)
+  - [x] 엣지 연결 (순차)
+  - [x] 컴파일
+  - [x] run_workflow_sync / run_workflow (비동기) 함수
 
 #### Streamlit 테스트 3.9
 ```bash
@@ -488,11 +524,11 @@ streamlit run streamlit_app/test_day3_workflow.py
 ---
 
 ### Day 3 체크포인트
-- [ ] 5개 Agent 모두 구현 완료
-- [ ] CalorieCalculator 서비스 완성
-- [ ] LLM Fallback 로직 완성
-- [ ] LangGraph 워크플로우 연결 완료
-- [ ] End-to-End 테스트 통과
+- [x] 6개 Agent 모두 구현 완료 (QueryAnalyzer, RecipeFetcher, NutritionCalculator, ExerciseRecommender, ResponseFormatter, LLMFallback)
+- [x] CalorieCalculator 서비스 완성 (38개 운동, BMR/TDEE 계산, EPOC 적용)
+- [x] LLM Fallback 로직 완성
+- [x] LangGraph 워크플로우 연결 완료
+- [ ] End-to-End 테스트 통과 (OPENAI_API_KEY 필요)
 - [ ] Git 커밋 (`Day 3 완료: LangGraph 워크플로우 및 Agent 구현`)
 
 ---

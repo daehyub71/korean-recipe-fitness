@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     # OpenAI API
     openai_api_key: str = Field(..., alias="OPENAI_API_KEY")
+    openai_model: str = Field(default="gpt-4o-mini", alias="OPENAI_MODEL")
 
     # 공공데이터포털 API
     recipe_api_key: str = Field(..., alias="RECIPE_API_KEY")
