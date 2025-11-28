@@ -65,8 +65,33 @@ class LLMService:
 
     def __init__(self):
         self.settings = get_settings()
-        self.client = OpenAI(api_key=self.settings.openai_api_key)
         self.model = self.settings.openai_model
+        self.client = None
+        self._is_ready = False
+
+        # API 키 확인
+        api_key = self.settings.openai_api_key
+        if not api_key:
+            # Streamlit secrets에서 직접 읽기 시도
+            try:
+                import streamlit as st
+                if hasattr(st, 'secrets') and 'OPENAI_API_KEY' in st.secrets:
+                    api_key = st.secrets['OPENAI_API_KEY']
+                    logger.info("Streamlit secrets에서 OpenAI API 키 로드됨")
+            except Exception as e:
+                logger.warning(f"Streamlit secrets 로드 실패: {e}")
+
+        if api_key:
+            self.client = OpenAI(api_key=api_key)
+            self._is_ready = True
+            logger.info("LLM 서비스 초기화 완료")
+        else:
+            logger.warning("OpenAI API 키가 없습니다. LLM 기능 비활성화")
+
+    @property
+    def is_ready(self) -> bool:
+        """LLM 서비스 사용 가능 여부"""
+        return self._is_ready and self.client is not None
 
     def generate_recipe(
         self,
@@ -83,6 +108,10 @@ class LLMService:
         Returns:
             레시피 정보 딕셔너리 또는 None
         """
+        if not self.is_ready:
+            logger.warning("LLM 서비스가 준비되지 않았습니다. 레시피 생성 불가")
+            return None
+
         logger.info(f"GPT 레시피 생성: {food_name} ({servings}인분)")
 
         prompt = RECIPE_GENERATION_PROMPT.format(
@@ -138,6 +167,10 @@ class LLMService:
         Returns:
             영양정보 딕셔너리 또는 None
         """
+        if not self.is_ready:
+            logger.warning("LLM 서비스가 준비되지 않았습니다. 영양정보 추정 불가")
+            return None
+
         logger.info(f"GPT 영양정보 추정: {food_name} ({servings}인분)")
 
         prompt = NUTRITION_ESTIMATION_PROMPT.format(
@@ -218,6 +251,7 @@ _llm_service: Optional[LLMService] = None
 def get_llm_service() -> LLMService:
     """LLMService 싱글톤 인스턴스 반환"""
     global _llm_service
-    if _llm_service is None:
+    # 서비스가 없거나 준비되지 않았으면 다시 생성 시도
+    if _llm_service is None or not _llm_service.is_ready:
         _llm_service = LLMService()
     return _llm_service
