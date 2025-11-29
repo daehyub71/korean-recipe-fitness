@@ -33,9 +33,9 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                  [실시간 처리] - 사용자 요청 시               │
 ├─────────────────────────────────────────────────────────────┤
-│  QueryAnalyzer → RecipeFetcher → NutritionCalculator        │
-│       ↓              ↓                  ↓                   │
-│  ExerciseRecommender → ResponseFormatter → 최종 응답        │
+│  QueryAnalyzer → RecipeFetcher → LLMFallback                │
+│       ↓              ↓                ↓                     │
+│  NutritionCalculator → ExerciseRecommender → ResponseFormatter │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -47,7 +47,7 @@ korean-recipe-fitness/
 │   ├── config.py                 # pydantic-settings 설정
 │   ├── main.py                   # FastAPI 엔트리포인트
 │   ├── core/
-│   │   ├── agents/               # LangGraph Agents (5개)
+│   │   ├── agents/               # LangGraph Agents (6개)
 │   │   ├── workflow/             # LangGraph 워크플로우
 │   │   └── services/             # 비즈니스 로직
 │   ├── api/                      # REST API 라우트
@@ -143,6 +143,29 @@ streamlit run streamlit_app/main.py
 - **Streamlit UI**: http://localhost:8501
 - **FastAPI Docs**: http://localhost:8000/docs
 
+### 4. Streamlit Cloud Deployment
+
+1. GitHub에 저장소 푸시
+2. [share.streamlit.io](https://share.streamlit.io) 접속 후 로그인
+3. "New app" 클릭 → 저장소 선택
+4. Settings:
+   - Main file path: `streamlit_app/main.py`
+   - Python version: 3.11
+5. Secrets 설정 (Settings → Secrets):
+   ```toml
+   OPENAI_API_KEY = "your-openai-api-key"
+   RECIPE_API_KEY = "your-recipe-api-key"
+   NUTRITION_API_KEY = "your-nutrition-api-key"
+   ```
+
+**참고**: `.streamlit/secrets.toml.example` 파일 형식 참조
+
+## Known Limitations
+
+- **영양정보 DB**: Streamlit Cloud에서는 파일 크기 제한으로 영양정보 DB (~120MB)가 배포되지 않음
+- **LLM Fallback**: 영양정보 DB가 없을 경우 GPT가 영양정보를 추정하여 생성
+- **정확도**: GPT 생성 영양정보는 참고용이며, 정확한 영양 정보는 공공데이터 기반 결과 사용 권장
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
@@ -152,13 +175,14 @@ streamlit run streamlit_app/main.py
 
 ## LangGraph Workflow
 
-5-Agent Pipeline:
+6-Agent Pipeline:
 
 1. **QueryAnalyzer** - 음식명 추출, 인분 수 파악 (GPT)
 2. **RecipeFetcher** - 레시피 검색 (FAISS)
-3. **NutritionCalculator** - 칼로리/영양성분 조회 (SQLite)
-4. **ExerciseRecommender** - 운동 종류/시간 계산 (MET Table)
-5. **ResponseFormatter** - 최종 응답 생성 (GPT)
+3. **LLMFallback** - DB에 없는 레시피/영양정보 생성 (GPT)
+4. **NutritionCalculator** - 칼로리/영양성분 조회 (SQLite)
+5. **ExerciseRecommender** - 운동 종류/시간 계산 (MET Table)
+6. **ResponseFormatter** - 최종 응답 생성 (GPT)
 
 ## Calorie Calculation
 
