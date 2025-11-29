@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code when working with this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
@@ -10,87 +10,110 @@ Korean Recipe & Fitness Advisor - 한국 음식 레시피, 영양정보, 맞춤 
 
 ```bash
 # Activate virtual environment
-cd /Users/sunchulkim/src/korean-recipe-fitness
 source venv/bin/activate
 
-# Run FastAPI server
-uvicorn app.main:app --reload --port 8000
-
-# Run Streamlit app
+# Run Streamlit app (standalone mode - recommended)
 streamlit run streamlit_app/main.py
 
-# Data collection (batch)
-python scripts/collect_recipes.py
-python scripts/collect_nutrition.py
-python scripts/process_recipes.py
-python scripts/build_vector_db.py
-python scripts/build_nutrition_db.py
+# Run FastAPI server (optional - for API access)
+uvicorn app.main:app --reload --port 8000
+
+# Data collection (batch processing)
+python scripts/collect_recipes.py      # 레시피 수집
+python scripts/collect_nutrition.py    # 영양정보 수집
+python scripts/process_recipes.py      # 데이터 정제
+python scripts/build_vector_db.py      # FAISS 인덱스 빌드
+python scripts/build_nutrition_db.py   # SQLite DB 빌드
 
 # Run tests
 pytest tests/ -v
+pytest --cov=app --cov-report=html
 ```
 
 ## Architecture
 
-### Batch Processing (1회 또는 주기적)
-- `scripts/collect_recipes.py` - 공공데이터 레시피 API 수집
-- `scripts/collect_nutrition.py` - 공공데이터 영양정보 API 수집
-- `scripts/process_recipes.py` - 데이터 정제
-- `scripts/build_vector_db.py` - FAISS 인덱스 빌드
-- `scripts/build_nutrition_db.py` - SQLite 영양정보 빌드
+### LangGraph 6-Agent Pipeline
 
-### Real-time Processing (사용자 요청 시)
-LangGraph 5-Agent Pipeline:
-1. QueryAnalyzer → 2. RecipeFetcher → 3. NutritionCalculator → 4. ExerciseRecommender → 5. ResponseFormatter
+![Workflow Diagram](docs/workflow_diagram.png)
 
-## Key Files
+```
+QueryAnalyzer → RecipeFetcher → LLMFallback → NutritionCalculator → ExerciseRecommender → ResponseFormatter
+```
 
-| File | Purpose |
-|------|---------|
-| `app/config.py` | pydantic-settings 환경변수 관리 |
-| `app/core/workflow/graph.py` | LangGraph 워크플로우 정의 |
-| `app/core/workflow/state.py` | ChatState TypedDict 정의 |
-| `app/core/services/calorie_calculator.py` | Mifflin-St Jeor + MET + EPOC 계산 |
+| Agent | File | Purpose |
+|-------|------|---------|
+| QueryAnalyzer | `app/core/agents/query_analyzer.py` | GPT로 음식명/인분수 추출 |
+| RecipeFetcher | `app/core/agents/recipe_fetcher.py` | FAISS 벡터 검색 |
+| LLMFallback | `app/core/agents/llm_fallback.py` | DB에 없는 레시피/영양정보 GPT 생성 |
+| NutritionCalculator | `app/core/agents/nutrition_calculator.py` | SQLite 영양정보 조회 |
+| ExerciseRecommender | `app/core/agents/exercise_recommender.py` | MET 기반 운동 추천 |
+| ResponseFormatter | `app/core/agents/response_formatter.py` | GPT로 최종 응답 생성 |
+
+### Core Services
+
+| Service | File | Purpose |
+|---------|------|---------|
+| LLMService | `app/core/services/llm_service.py` | GPT-4o-mini API 호출, st.secrets 지원 |
+| VectorDBService | `app/core/services/vector_db_service.py` | FAISS 벡터 검색 |
+| NutritionDBService | `app/core/services/nutrition_db_service.py` | SQLite 영양정보 조회 |
+| CalorieCalculator | `app/core/services/calorie_calculator.py` | Mifflin-St Jeor + MET + EPOC |
+
+### State Management
+
+`app/core/workflow/state.py` - ChatState TypedDict:
+- `analyzed_query`: 파싱된 쿼리 (food_name, servings)
+- `recipe`: 레시피 정보 (ingredients, instructions, image_url)
+- `recipe_source`: "database" | "llm_fallback"
+- `nutrition`: 영양정보 (calories, protein, fat, carbohydrate)
+- `exercise`: 운동 추천 목록
 
 ## Environment Variables
 
-Required in `.env`:
-- `OPENAI_API_KEY` - OpenAI API key
-- `RECIPE_API_KEY` - 공공데이터포털 조리식품 레시피 DB
-- `NUTRITION_API_KEY` - 공공데이터포털 식품영양성분 DB
+`.env` 또는 `.streamlit/secrets.toml`:
+```
+OPENAI_API_KEY=sk-...
+RECIPE_API_KEY=...          # 공공데이터포털 레시피 API
+NUTRITION_API_KEY=...       # 공공데이터포털 영양정보 API
+```
 
-## Data Directories
+## Streamlit Cloud Deployment
+
+1. `data/processed/recipes.json` (~2MB) - 포함됨
+2. `data/vector_db/*` (~7MB) - 포함됨
+3. `data/database/nutrition.db` (~53MB) - **제외됨** (gitignore)
+4. `data/processed/nutrition.json` (~120MB) - **제외됨** (gitignore)
+
+**영양정보 DB 없이 배포 시**: LLMFallback이 GPT로 영양정보 추정
+
+Secrets 설정 (Streamlit Cloud → Settings → Secrets):
+```toml
+OPENAI_API_KEY = "sk-..."
+RECIPE_API_KEY = "..."
+NUTRITION_API_KEY = "..."
+```
+
+## Data Flow
 
 ```
-data/
-├── raw/                  # API 원본 응답
-│   ├── recipes_raw.json
-│   └── nutrition_raw.json
-├── processed/            # 정제된 데이터
-│   └── recipes.json
-├── vector_db/            # FAISS 인덱스
-│   ├── faiss.index
-│   └── metadata.json
-└── database/             # SQLite
-    └── nutrition.db
+[배치 처리]
+공공데이터 API → scripts/collect_*.py → data/raw/
+                → scripts/process_recipes.py → data/processed/recipes.json
+                → scripts/build_vector_db.py → data/vector_db/faiss.index
+                → scripts/build_nutrition_db.py → data/database/nutrition.db
+
+[실시간 처리]
+User Query → QueryAnalyzer (GPT) → RecipeFetcher (FAISS)
+           → LLMFallback (GPT, if needed) → NutritionCalculator (SQLite)
+           → ExerciseRecommender (MET) → ResponseFormatter (GPT) → Response
 ```
+
+## Calorie Calculation
+
+- **BMR**: Mifflin-St Jeor 공식 (성별, 나이, 체중, 키)
+- **MET**: Compendium of Physical Activities 2024 기준
+- **EPOC**: 운동 후 추가 칼로리 소모 (고강도 +15%, 중강도 +7%)
 
 ## API Endpoints
 
 - `POST /api/search` - 음식 검색 및 운동 추천
 - `GET /api/health` - 헬스체크
-
-## Streamlit Test Files
-
-Day 1 테스트:
-- `test_day1_setup.py` - 프로젝트 구조 확인
-- `test_day1_deps.py` - 패키지 설치 확인
-- `test_day1_config.py` - 환경변수 테스트
-- `test_day1_recipe_api.py` - 레시피 API 테스트
-- `test_day1_nutrition_api.py` - 영양정보 API 테스트
-- `test_day1_data.py` - 데이터 정제 결과 확인
-
-## Development Plan
-
-상세 개발계획서: `docs/korean-recipe-fitness-plan.md`
-상세 ToDo List: `docs/korean-recipe-fitness-todo.md`
