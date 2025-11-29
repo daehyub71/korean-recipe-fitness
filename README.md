@@ -23,6 +23,12 @@
 
 ## Architecture
 
+### LangGraph Workflow Diagram
+
+![LangGraph Workflow](docs/workflow_diagram.png)
+
+### System Overview
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    [배치 처리] - 1회 또는 주기적              │
