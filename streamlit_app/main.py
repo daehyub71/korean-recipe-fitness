@@ -30,9 +30,8 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 공통 스타일 적용
-apply_page_style()
-load_css()
+# 메인 페이지 접속 시 Recipe_Search로 리다이렉트
+st.switch_page("pages/1_Recipe_Search.py")
 
 
 def init_session_state():
