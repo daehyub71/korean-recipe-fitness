@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI K-Food - 영양 정보</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;family=Noto+Sans+KR:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#5D9C59",
+              "secondary": "#DFD7BF",
+              "accent": "#F0A04B",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102210",
+              "text-light": "#333333",
+              "text-dark": "#E0E0E0",
+              "border-light": "#E0E0E0",
+              "border-dark": "#444444"
+            },
+            fontFamily: {
+              "display": ["Lexend", "Noto Sans KR", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light dark:border-border-dark px-4 sm:px-10 lg:px-20 py-4 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl">ramen_dining</span>
+<h2 class="text-text-light dark:text-text-dark text-xl font-bold leading-tight tracking-tight">AI K-Food</h2>
+</div>
+</div>
+<div class="hidden md:flex flex-1 justify-center gap-8">
+<div class="flex items-center gap-9">
+<a class="text-text-light dark:text-text-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="#">레시피</a>
+<a class="text-text-light dark:text-text-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="#">운동 추천</a>
+<a class="text-text-light dark:text-text-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="#">마이페이지</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 rounded-full border border-border-light dark:border-border-dark p-1">
+<button class="px-3 py-1 rounded-full text-xs font-bold bg-primary text-white">KR</button>
+<button class="px-3 py-1 rounded-full text-xs font-bold text-text-light/60 dark:text-text-dark/60 hover:bg-gray-200 dark:hover:bg-gray-700">EN</button>
+</div>
+<button class="hidden md:flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">로그인</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAJyqwgnAIuUZPezltqVjN_iBzd9pUnnUHwMmYFnAgCQFluCoeE4lSkI05L6TeAItgnap4Y2reHzt0D1goKixcGnpTIU0iDUoelbJIHESU_sEA31cAw8LqvCXf0t_KN89smnUPc7nBQs5y6gVO8rYCB3lyt4KhWZ40puCBAL1DQUZAmIW6-BukyBXj4qe5YxRUEHtu8l6uWq2UPICPmroHM3Lp2ACTwiW1GUcfkVj5xAB2iMyglijtt5cumXdZQCe5m0P9xTfjw5Gkd");'></div>
+</div>
+</header>
+<main class="px-4 sm:px-10 lg:px-20 flex flex-1 justify-center py-10">
+<div class="layout-content-container flex flex-col max-w-4xl flex-1 gap-8">
+<div class="flex flex-wrap gap-2 text-sm">
+<a class="text-text-light/70 dark:text-text-dark/70 hover:text-primary dark:hover:text-primary transition-colors" href="#">홈</a>
+<span class="text-text-light/50 dark:text-text-dark/50">/</span>
+<a class="text-text-light/70 dark:text-text-dark/70 hover:text-primary dark:hover:text-primary transition-colors" href="#">레시피 검색</a>
+<span class="text-text-light/50 dark:text-text-dark/50">/</span>
+<a class="text-text-light/70 dark:text-text-dark/70 hover:text-primary dark:hover:text-primary transition-colors" href="#">불고기</a>
+<span class="text-text-light/50 dark:text-text-dark/50">/</span>
+<span class="font-semibold text-text-light dark:text-text-dark">영양 정보</span>
+</div>
+<div class="w-full h-80 bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-xl" data-alt="A delicious looking plate of Bulgogi" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBYW2vdrGWSOf-bbkX7H0-lLBvavTzRngF7MI1diZhsk_SEurnCxvMKadjrgmClyUeSTTflFduKjHuM8qzsU4DP5EbtL_d_d1ol7Dip_5QNyMO82DHlWA5dX1XzG44aX_PtD93V3_UGQM1bj6TM7EdTSqbBdml3VlpzLyBN-eXSRoz2AE1kAwxg32zTyou5JGiIC035xFRj0YGoRZCu9khygWA3YB8FUai0kuqoSwSscFQavvru-VKF1fbszmrEm1yt-hV2mcCg1e_D");'></div>
+<div class="flex flex-wrap justify-between gap-4 items-start">
+<div class="flex flex-col gap-2">
+<p class="text-4xl font-black leading-tight tracking-tighter">불고기</p>
+<p class="text-text-light/80 dark:text-text-dark/80 text-base font-normal leading-normal max-w-lg">달콤한 간장 양념에 재운 소고기를 구워 만든 한국의 대표적인 요리입니다.</p>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-11 px-5 gap-2 border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark text-sm font-bold leading-normal hover:border-primary/50 dark:hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-lg text-accent" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+<span class="truncate">즐겨찾기</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-4">
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-6 border border-border-light dark:border-border-dark bg-secondary/20 dark:bg-secondary/10">
+<p class="text-base font-medium leading-normal">총 칼로리 (1인분)</p>
+<p class="tracking-light text-3xl font-bold leading-tight text-accent">450 kcal</p>
+</div>
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-6 border border-border-light dark:border-border-dark bg-secondary/20 dark:bg-secondary/10">
+<p class="text-base font-medium leading-normal">예상 조리 시간</p>
+<p class="tracking-light text-3xl font-bold leading-tight">30분</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+<div class="md:col-span-2 flex flex-col items-center justify-center p-6 border rounded-lg border-border-light dark:border-border-dark bg-secondary/20 dark:bg-secondary/10">
+<h3 class="font-bold text-lg mb-4 text-center">주요 영양소 구성</h3>
+<div class="relative w-48 h-48">
+<svg class="w-full h-full" viewBox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e0e0e0" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke="#F0A04B" stroke-dasharray="35, 100" stroke-linecap="round" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke="#5D9C59" stroke-dasharray="0, 35, 40, 25" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-black text-accent">450</span>
+<span class="text-sm text-text-light/70 dark:text-text-dark/70">kcal</span>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-3 w-full max-w-xs">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-accent"></span>
+<span>탄수화물 (35%)</span>
+</div>
+<span class="font-semibold">40g</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span>단백질 (40%)</span>
+</div>
+<span class="font-semibold">45g</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-[#e0e0e0]"></span>
+<span>지방 (25%)</span>
+</div>
+<span class="font-semibold">28g</span>
+</div>
+</div>
+</div>
+<div class="md:col-span-3 flex flex-col p-6 border rounded-lg border-border-light dark:border-border-dark bg-secondary/20 dark:bg-secondary/10">
+<h3 class="font-bold text-lg mb-6">일일 권장량 대비</h3>
+<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-baseline">
+<p class="font-medium text-sm">나트륨</p>
+<p class="text-sm"><span class="font-bold text-accent">600mg</span> / 2000mg (30%)</p>
+</div>
+<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+<div class="bg-accent h-2.5 rounded-full" style="width: 30%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-baseline">
+<p class="font-medium text-sm">당류</p>
+<p class="text-sm"><span class="font-bold text-accent">25g</span> / 50g (50%)</p>
+</div>
+<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+<div class="bg-accent h-2.5 rounded-full" style="width: 50%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-baseline">
+<p class="font-medium text-sm">포화지방</p>
+<p class="text-sm"><span class="font-bold text-accent">10g</span> / 15g (67%)</p>
+</div>
+<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+<div class="bg-accent h-2.5 rounded-full" style="width: 67%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border rounded-lg border-border-light dark:border-border-dark bg-secondary/20 dark:bg-secondary/10">
+<div class="p-6">
+<h3 class="font-bold text-lg">상세 영양 성분표</h3>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">1회 제공량 (300g) 기준</p>
+</div>
+<div class="border-t border-border-light dark:border-border-dark p-6 grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6 text-sm">
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>열량</span><span class="font-semibold">450 kcal</span></div>
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>탄수화물</span><span class="font-semibold">40 g</span></div>
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>당류</span><span class="font-semibold">25 g</span></div>
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>단백질</span><span class="font-semibold">45 g</span></div>
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>지방</span><span class="font-semibold">28 g</span></div>
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>포화지방</span><span class="font-semibold">10 g</span></div>
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>트랜스지방</span><span class="font-semibold">0 g</span></div>
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>콜레스테롤</span><span class="font-semibold">120 mg</span></div>
+<div class="flex justify-between border-b pb-2 border-dashed border-border-light/50 dark:border-border-dark/50"><span>나트륨</span><span class="font-semibold">600 mg</span></div>
+</div>
+</div>
+<div class="flex flex-col gap-6 py-8 border-t border-border-light dark:border-border-dark mt-4">
+<div class="flex flex-col items-center text-center gap-2">
+<h2 class="text-3xl font-bold">영양 정보 비교하기</h2>
+<p class="text-text-light/70 dark:text-text-dark/70 max-w-xl">다른 음식과 영양 정보를 비교해보세요. 비교하고 싶은 음식을 검색하여 추가할 수 있습니다.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-2 rounded-lg p-4 border border-border-light dark:border-border-dark bg-secondary/20 dark:bg-secondary/10">
+<div class="w-full h-32 bg-center bg-no-repeat bg-cover rounded-md" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBYW2vdrGWSOf-bbkX7H0-lLBvavTzRngF7MI1diZhsk_SEurnCxvMKadjrgmClyUeSTTflFduKjHuM8qzsU4DP5EbtL_d_d1ol7Dip_5QNyMO82DHlWA5dX1XzG44aX_PtD93V3_UGQM1bj6TM7EdTSqbBdml3VlpzLyBN-eXSRoz2AE1kAwxg32zTyou5JGiIC035xFRj0YGoRZCu9khygWA3YB8FUai0kuqoSwSscFQavvru-VKF1fbszmrEm1yt-hV2mcCg1e_D");'></div>
+<h4 class="font-bold text-lg">불고기</h4>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-4 border border-border-light dark:border-border-dark bg-secondary/20 dark:bg-secondary/10">
+<div class="w-full h-32 bg-center bg-no-repeat bg-cover rounded-md" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwwRpeKdG6Pimn5jzR0uPXplnZhOHS6WZ7kJ9l6MVCULKMIrF5Dmp90ayzQlSHxFD1m4M5joPKsyvv8DHrxg9ZsgoxxzSQXtgvjHzf9xrFG2PhBxRwpAW6cu7D8X7rnu6cT6aeEDWcaeJpc3cfkOsO-VRpjlSsfI2opWOoupjGnyzkcHiyoatRHg_jeinxqSdtYPjl3L5WM0P3y2WKCFqrSOl2naXK8oUWOevmIcCpqj2XuA8aCPt49BzOOJjIwT4UJRV_OoZSRoYi");'></div>
+<h4 class="font-bold text-lg">김치찌개</h4>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg p-4 border-2 border-dashed border-border-light dark:border-border-dark hover:border-primary dark:hover:border-primary transition-colors cursor-pointer min-h-[178px] bg-background-light dark:bg-background-dark">
+<span class="material-symbols-outlined text-4xl text-text-light/50 dark:text-text-dark/50">add_circle</span>
+<p class="font-medium text-text-light/70 dark:text-text-dark/70">음식 추가하기</p>
+</div>
+</div>
+<div class="w-full overflow-x-auto">
+<table class="w-full min-w-[600px] text-sm text-left">
+<thead class="bg-secondary/30 dark:bg-secondary/20 text-text-light dark:text-text-dark">
+<tr>
+<th class="p-4 font-semibold rounded-l-lg">영양소</th>
+<th class="p-4 font-semibold text-center">불고기 (1인분)</th>
+<th class="p-4 font-semibold text-center">김치찌개 (1인분)</th>
+<th class="p-4 font-semibold text-center rounded-r-lg">일일 권장량</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="p-4 font-medium">칼로리</td>
+<td class="p-4 text-center font-bold text-accent">450 kcal</td>
+<td class="p-4 text-center font-bold text-primary">480 kcal</td>
+<td class="p-4 text-center text-text-light/70 dark:text-text-dark/70">2000 kcal</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="p-4 font-medium">탄수화물</td>
+<td class="p-4 text-center">40 g</td>
+<td class="p-4 text-center">15 g</td>
+<td class="p-4 text-center text-text-light/70 dark:text-text-dark/70">324 g</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="p-4 font-medium">단백질</td>
+<td class="p-4 text-center">45 g</td>
+<td class="p-4 text-center">30 g</td>
+<td class="p-4 text-center text-text-light/70 dark:text-text-dark/70">55 g</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="p-4 font-medium">지방</td>
+<td class="p-4 text-center">28 g</td>
+<td class="p-4 text-center">32 g</td>
+<td class="p-4 text-center text-text-light/70 dark:text-text-dark/70">54 g</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="p-4 font-medium">나트륨</td>
+<td class="p-4 text-center">600 mg</td>
+<td class="p-4 text-center text-accent font-bold">1200 mg</td>
+<td class="p-4 text-center text-text-light/70 dark:text-text-dark/70">2000 mg</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 border rounded-lg border-border-light dark:border-border-dark bg-secondary/20 dark:bg-secondary/10">
+<h3 class="font-bold text-lg mb-4 text-center">영양소별 비교 그래프</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6 text-sm">
+<div class="flex flex-col gap-2">
+<p class="font-medium text-center">칼로리</p>
+<div class="flex items-end justify-center gap-3 h-28">
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-accent rounded-t" style="height: 45%;"></div><span class="text-xs">불고기</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-primary rounded-t" style="height: 48%;"></div><span class="text-xs">김치찌개</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<p class="font-medium text-center">탄수화물</p>
+<div class="flex items-end justify-center gap-3 h-28">
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-accent rounded-t" style="height: 40%;"></div><span class="text-xs">불고기</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-primary rounded-t" style="height: 15%;"></div><span class="text-xs">김치찌개</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<p class="font-medium text-center">단백질</p>
+<div class="flex items-end justify-center gap-3 h-28">
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-accent rounded-t" style="height: 82%;"></div><span class="text-xs">불고기</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-primary rounded-t" style="height: 55%;"></div><span class="text-xs">김치찌개</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<p class="font-medium text-center">지방</p>
+<div class="flex items-end justify-center gap-3 h-28">
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-accent rounded-t" style="height: 52%;"></div><span class="text-xs">불고기</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-primary rounded-t" style="height: 59%;"></div><span class="text-xs">김치찌개</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<p class="font-medium text-center">나트륨</p>
+<div class="flex items-end justify-center gap-3 h-28">
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-accent rounded-t" style="height: 30%;"></div><span class="text-xs">불고기</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 bg-primary rounded-t" style="height: 60%;"></div><span class="text-xs">김치찌개</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-4 py-8">
+<button class="flex-1 flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-12 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="truncate">레시피 보기</span>
+</button>
+<button class="flex-1 flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-12 px-6 bg-accent text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-accent/90 transition-colors">
+<span class="material-symbols-outlined">fitness_center</span>
+<span class="truncate">이 음식에 맞는 운동 추천받기</span>
+</button>
+</div>
+</div>
+</main>
+<footer class="bg-secondary/30 dark:bg-secondary/10 mt-10">
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-20 text-sm text-center text-text-light/60 dark:text-text-dark/60">
+<p>© 2024 AI K-Food. All rights reserved.</p>
+<div class="mt-4 flex justify-center gap-x-6">
+<a class="hover:text-primary transition-colors" href="#">이용약관</a>
+<a class="hover:text-primary transition-colors" href="#">개인정보 처리방침</a>
+<a class="hover:text-primary transition-colors" href="#">문의하기</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

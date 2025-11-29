@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>맞춤 운동 추천 (언어 토글 추가됨)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;family=Noto+Sans+KR:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#4CAF50",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102210",
+              "surface-light": "#ffffff",
+              "surface-dark": "#182c18",
+              "text-light-primary": "#0d1b0d",
+              "text-dark-primary": "#e7f3e7",
+              "text-light-secondary": "#4c9a4c",
+              "text-dark-secondary": "#a5d6a7",
+              "border-light": "#e7f3e7",
+              "border-dark": "#2e4a2e",
+              "accent-orange": "#FF9800",
+              "accent-coral": "#FF7F50"
+            },
+            fontFamily: {
+              "display": ["Lexend", "Noto Sans KR", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.5rem",
+              "lg": "0.75rem",
+              "xl": "1rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary">
+<div class="relative flex min-h-screen w-full flex-col">
+<header class="sticky top-0 z-10 w-full bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-sm border-b border-border-light dark:border-border-dark">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.8261 17.4264C16.7203 18.1174 20.2244 18.5217 24 18.5217C27.7756 18.5217 31.2797 18.1174 34.1739 17.4264C36.9144 16.7722 39.9967 15.2331 41.3563 14.1648L24.8486 40.6391C24.4571 41.267 23.5429 41.267 23.1514 40.6391L6.64374 14.1648C8.00331 15.2331 11.0856 16.7722 13.8261 17.4264Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M39.998 12.236C39.9944 12.2537 39.9875 12.2845 39.9748 12.3294C39.9436 12.4399 39.8949 12.5741 39.8346 12.7175C39.8168 12.7597 39.7989 12.8007 39.7813 12.8398C38.5103 13.7113 35.9788 14.9393 33.7095 15.4811C30.9875 16.131 27.6413 16.5217 24 16.5217C20.3587 16.5217 17.0125 16.131 14.2905 15.4811C12.0012 14.9346 9.44505 13.6897 8.18538 12.8168C8.17384 12.7925 8.16216 12.767 8.15052 12.7408C8.09919 12.6249 8.05721 12.5114 8.02977 12.411C8.00356 12.3152 8.00039 12.2667 8.00004 12.2612C8.00004 12.261 8 12.2607 8.00004 12.2612C8.00004 12.2359 8.0104 11.9233 8.68485 11.3686C9.34546 10.8254 10.4222 10.2469 11.9291 9.72276C14.9242 8.68098 19.1919 8 24 8C28.8081 8 33.0758 8.68098 36.0709 9.72276C37.5778 10.2469 38.6545 10.8254 39.3151 11.3686C39.9006 11.8501 39.9857 12.1489 39.998 12.236ZM4.95178 15.2312L21.4543 41.6973C22.6288 43.5809 25.3712 43.5809 26.5457 41.6973L43.0534 15.223C43.0709 15.1948 43.0878 15.1662 43.104 15.1371L41.3563 14.1648C43.104 15.1371 43.1038 15.1374 43.104 15.1371L43.1051 15.135L43.1065 15.1325L43.1101 15.1261L43.1199 15.1082C43.1276 15.094 43.1377 15.0754 43.1497 15.0527C43.1738 15.0075 43.2062 14.9455 43.244 14.8701C43.319 14.7208 43.4196 14.511 43.5217 14.2683C43.6901 13.8679 44 13.0689 44 12.2609C44 10.5573 43.003 9.22254 41.8558 8.2791C40.6947 7.32427 39.1354 6.55361 37.385 5.94477C33.8654 4.72057 29.133 4 24 4C18.867 4 14.1346 4.72057 10.615 5.94478C8.86463 6.55361 7.30529 7.32428 6.14419 8.27911C4.99695 9.22255 3.99999 10.5573 3.99999 12.2609C3.99999 13.1275 4.29264 13.9078 4.49321 14.3607C4.60375 14.6102 4.71348 14.8196 4.79687 14.9689C4.83898 15.0444 4.87547 15.1065 4.9035 15.1529C4.91754 15.1762 4.92954 15.1957 4.93916 15.2111L4.94662 15.223L4.95178 15.2312ZM35.9868 18.996L24 38.22L12.0131 18.996C12.4661 19.1391 12.9179 19.2658 13.3617 19.3718C16.4281 20.1039 20.0901 20.5217 24 20.5217C27.9099 20.5217 31.5719 20.1039 34.6383 19.3718C35.082 19.2658 35.5339 19.1391 35.9868 18.996Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h1 class="text-lg font-bold tracking-[-0.015em]">AI 푸드 &amp; 피트니스</h1>
+</div>
+<div class="hidden md:flex flex-1 justify-center gap-8">
+<a class="text-sm font-medium hover:text-primary dark:hover:text-primary transition-colors" href="#">레시피</a>
+<a class="text-sm font-medium hover:text-primary dark:hover:text-primary transition-colors" href="#">영양 정보</a>
+<a class="text-sm font-bold text-primary dark:text-primary" href="#">운동 추천</a>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center border border-border-light dark:border-border-dark rounded-full p-1">
+<button class="px-3 py-1 text-xs font-bold bg-primary text-white rounded-full">KO</button>
+<button class="px-3 py-1 text-xs font-bold text-text-light-primary/60 dark:text-text-dark-primary/60">EN</button>
+</div>
+<button class="flex items-center justify-center rounded-full h-10 w-10 hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDW_CLrnsskolzurGeLFBk5xUHyxY12aboIEO_KS9SGv5mcsa3IFok9YZBxoheVyV_xB41dfP_1Q62Efqt683hFJiO5NhIdGB0KyXyv3nJqKQjKiq1RxljIZ3bV45Ih3LZWwqMRBBeLzRx3teeS6EX3MoxcEAnAJ02l3rSHM-EiuNvM9sIzGdhAKoIxHwDjjONw1UklIo9p-UE-1Put403J2XlfmUtFfgUFniqo8ajkuFsgHD8qJAI0C4Jl2mQJaF6631WKGppNT7CR");'></div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+<div class="max-w-5xl mx-auto">
+<div class="text-center mb-8">
+<h2 class="text-4xl font-black leading-tight tracking-[-0.033em]">오늘의 맞춤 운동</h2>
+<p class="text-base font-normal leading-normal text-text-light-primary/70 dark:text-text-dark-primary/70 mt-2 max-w-2xl mx-auto">사용자님의 프로필과 오늘 섭취 칼로리를 바탕으로 AI가 추천하는 최적의 운동 플랜입니다.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+<div class="lg:col-span-1 bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-border-light dark:border-border-dark flex flex-col items-center text-center">
+<h3 class="text-lg font-bold mb-1">총 섭취 칼로리</h3>
+<p class="text-5xl font-black text-primary my-4">1,850 <span class="text-2xl font-bold">kcal</span></p>
+<p class="text-sm text-text-light-primary/70 dark:text-text-dark-primary/70">기초대사량(BMR) 1,650 kcal</p>
+</div>
+<div class="lg:col-span-2 bg-primary/90 text-white dark:text-text-dark-primary p-6 rounded-xl shadow-sm flex flex-col justify-center items-center text-center">
+<h3 class="text-lg font-bold mb-2">오늘의 운동 목표</h3>
+<p class="text-sm opacity-80 mb-4">순수 칼로리 소모 목표: 200 kcal</p>
+<div class="flex items-baseline gap-2">
+<span class="material-symbols-outlined text-5xl">local_fire_department</span>
+<p class="text-5xl font-black">410 <span class="text-2xl font-bold">kcal</span></p>
+</div>
+<p class="text-sm font-medium mt-1">총 예상 소모 칼로리 (운동 + EPOC)</p>
+</div>
+</div>
+<div class="space-y-6">
+<div class="text-center">
+<h3 class="text-2xl font-bold">AI 추천 운동 플랜</h3>
+<p class="text-text-light-primary/70 dark:text-text-dark-primary/70 mt-1">MET 및 EPOC 계산을 통해 가장 효율적인 운동을 추천합니다.</p>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-xl shadow-sm border border-border-light dark:border-border-dark flex flex-col sm:flex-row items-center gap-6 hover:border-primary dark:hover:border-primary hover:shadow-lg transition-all duration-300">
+<div class="flex-shrink-0">
+<div class="flex items-center justify-center size-20 bg-primary/20 text-primary rounded-full">
+<span class="material-symbols-outlined text-4xl">directions_run</span>
+</div>
+</div>
+<div class="flex-grow w-full">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+<div>
+<p class="text-sm text-primary font-bold">유산소</p>
+<h4 class="text-xl font-bold">가벼운 조깅</h4>
+</div>
+<div class="mt-2 sm:mt-0 text-left sm:text-right">
+<p class="text-lg font-bold">30분 / 중강도</p>
+<p class="text-sm text-text-light-primary/70 dark:text-text-dark-primary/70">MET: 7.0</p>
+</div>
+</div>
+<div class="w-full bg-border-light dark:bg-border-dark rounded-full h-2.5 my-3">
+<div class="bg-accent-coral h-2.5 rounded-full" style="width: 61%"></div>
+</div>
+<p class="text-sm font-semibold text-right text-accent-coral">예상 소모: 250 kcal (EPOC 포함)</p>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-xl shadow-sm border border-border-light dark:border-border-dark flex flex-col sm:flex-row items-center gap-6 hover:border-primary dark:hover:border-primary hover:shadow-lg transition-all duration-300">
+<div class="flex-shrink-0">
+<div class="flex items-center justify-center size-20 bg-primary/20 text-primary rounded-full">
+<span class="material-symbols-outlined text-4xl">fitness_center</span>
+</div>
+</div>
+<div class="flex-grow w-full">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+<div>
+<p class="text-sm text-primary font-bold">근력</p>
+<h4 class="text-xl font-bold">푸시업 &amp; 스쿼트</h4>
+</div>
+<div class="mt-2 sm:mt-0 text-left sm:text-right">
+<p class="text-lg font-bold">15분 / 고강도</p>
+<p class="text-sm text-text-light-primary/70 dark:text-text-dark-primary/70">MET: 8.0</p>
+</div>
+</div>
+<div class="w-full bg-border-light dark:bg-border-dark rounded-full h-2.5 my-3">
+<div class="bg-accent-coral h-2.5 rounded-full" style="width: 24%"></div>
+</div>
+<p class="text-sm font-semibold text-right text-accent-coral">예상 소모: 100 kcal (EPOC 포함)</p>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-xl shadow-sm border border-border-light dark:border-border-dark flex flex-col sm:flex-row items-center gap-6 hover:border-primary dark:hover:border-primary hover:shadow-lg transition-all duration-300">
+<div class="flex-shrink-0">
+<div class="flex items-center justify-center size-20 bg-primary/20 text-primary rounded-full">
+<span class="material-symbols-outlined text-4xl">self_improvement</span>
+</div>
+</div>
+<div class="flex-grow w-full">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+<div>
+<p class="text-sm text-primary font-bold">유연성</p>
+<h4 class="text-xl font-bold">마무리 스트레칭</h4>
+</div>
+<div class="mt-2 sm:mt-0 text-left sm:text-right">
+<p class="text-lg font-bold">10분 / 저강도</p>
+<p class="text-sm text-text-light-primary/70 dark:text-text-dark-primary/70">MET: 2.5</p>
+</div>
+</div>
+<div class="w-full bg-border-light dark:bg-border-dark rounded-full h-2.5 my-3">
+<div class="bg-accent-coral h-2.5 rounded-full" style="width: 15%"></div>
+</div>
+<p class="text-sm font-semibold text-right text-accent-coral">예상 소모: 60 kcal (EPOC 포함)</p>
+</div>
+</div>
+</div>
+<div class="mt-12 flex flex-col sm:flex-row justify-center gap-4">
+<button class="w-full sm:w-auto bg-primary text-white dark:text-text-dark-primary font-bold py-3 px-8 rounded-lg shadow-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">save</span>
+                        운동 계획 저장하기
+                    </button>
+<button class="w-full sm:w-auto bg-surface-light dark:bg-surface-dark text-text-light-primary dark:text-text-dark-primary border border-border-light dark:border-border-dark font-bold py-3 px-8 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">refresh</span>
+                        다른 운동 추천받기
+                    </button>
+</div>
+</div>
+</main>
+<footer class="bg-surface-light dark:bg-surface-dark border-t border-border-light dark:border-border-dark mt-auto">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-text-light-primary/60 dark:text-text-dark-primary/60">
+<p>© 2024 AI 푸드 &amp; 피트니스. All Rights Reserved.</p>
+<div class="mt-2 space-x-4">
+<a class="hover:underline" href="#">이용약관</a>
+<a class="hover:underline" href="#">개인정보처리방침</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

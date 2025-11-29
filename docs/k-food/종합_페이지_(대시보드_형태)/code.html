@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI K-Food 대시보드</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/20 dark:border-primary/30 px-4 sm:px-6 lg:px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-emerald-950 dark:text-emerald-50">
+<div class="size-6 text-primary">
+<svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] text-emerald-950 dark:text-emerald-50">AI 한식 푸드</h2>
+</div>
+</div>
+<div class="hidden md:flex flex-1 justify-center gap-8">
+<div class="flex items-center gap-9">
+<a class="text-sm font-medium leading-normal text-emerald-950 dark:text-emerald-50 hover:text-primary" href="#">홈</a>
+<a class="text-sm font-medium leading-normal text-emerald-950 dark:text-emerald-50 hover:text-primary" href="#">레시피 검색</a>
+<a class="text-sm font-medium leading-normal text-emerald-950 dark:text-emerald-50 hover:text-primary" href="#">내 프로필</a>
+</div>
+</div>
+<div class="flex items-center justify-end gap-4">
+<label class="hidden sm:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-emerald-700 dark:text-emerald-300 flex border-none bg-primary/20 dark:bg-primary/30 items-center justify-center pl-3 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-emerald-950 dark:text-emerald-50 focus:outline-0 focus:ring-0 border-none bg-primary/20 dark:bg-primary/30 focus:border-none h-full placeholder:text-emerald-700 dark:placeholder:text-emerald-300 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="검색" value=""/>
+</div>
+</label>
+<div class="flex items-center gap-2 p-1 rounded-lg bg-primary/20 dark:bg-primary/30">
+<button class="flex items-center justify-center rounded-md h-8 px-3 text-sm font-bold bg-primary text-emerald-950">
+<span class="truncate">KO</span>
+</button>
+<button class="flex items-center justify-center rounded-md h-8 px-3 text-sm font-medium text-emerald-950 dark:text-emerald-50 hover:bg-primary/20 dark:hover:bg-primary/10">
+<span class="truncate">EN</span>
+</button>
+</div>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-primary/20 dark:bg-primary/30 text-emerald-950 dark:text-emerald-50 gap-2 text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBgknuWn-AJvBYOkFY0fYF-cjiQgQcJRfQPSor4Ub2Q6Zw_zV7TQ3M9EhCjlVWfI06ca3lt1M7zjGHHIAJ-6Sir-bV2NKnTynBRRSL3Apw7dcLiMKG53lVcMjvrs5BY2-g9tA0h1bvhUw7-2zNCJvIqs5Y6f3yPWVabtgWKUr6_-U779BR8LadMTZ9H9kLdrTXjW1tX33kZc8vNrr_U3h5USlZl9Xd7cwzco5hb1sPrftq7laBfbQ-sZo-94To5279foWX4eRiDPG5A");'></div>
+</div>
+</header>
+<main class="flex flex-col gap-6 p-4">
+<div class="flex flex-wrap justify-between gap-3">
+<div class="flex min-w-72 flex-col gap-3">
+<p class="text-4xl font-black leading-tight tracking-[-0.033em] text-emerald-950 dark:text-emerald-50">비빔밥: 완벽한 균형</p>
+<p class="text-base font-normal leading-normal text-emerald-700 dark:text-emerald-300">선택한 요리에 대한 영양 정보 및 맞춤 운동 추천을 포함한 전체 개요입니다.</p>
+</div>
+</div>
+<div class="p-0 @container">
+<div class="flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start shadow-md bg-white dark:bg-background-dark/50">
+<div class="w-full @xl:w-2/5 h-64 @xl:h-auto bg-center bg-no-repeat bg-cover rounded-t-xl @xl:rounded-l-xl @xl:rounded-r-none" data-alt="A vibrant bowl of Bibimbap with various colorful vegetables, an egg, and meat" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBPygqLZdN4nypx9Bv1qlYPI9lPFfr08nCavxXj2_nO7m6DnnPyYWLsSWr_yrFWpn7dn5ISRXdmmuvvIwTTH46pGLSv0SnOP4YGXofUDh7HzpQi2Eg4Wzwn_GufcvEqwQ1DUlVwLIYF5Wa_-aBfO95zw1Y2ooiQFhFrJoEo3021hDHr-pqGuDoRrpcgUTGQFjh-BH48ex8_CaE7C7BKj2e2X4jj3iQxfGuDAwzZDu_C3qoBeRqDW85H0Op5Ng3kCGzUgwVTkqHXDoxB");'></div>
+<div class="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-4 p-6">
+<p class="text-lg font-bold leading-tight tracking-[-0.015em] text-emerald-950 dark:text-emerald-50">AI 요약</p>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-base font-normal leading-normal text-emerald-700 dark:text-emerald-300">고단백 비빔밥은 운동 후 식사로 좋습니다. 회복을 돕기 위해 추천된 스트레칭 운동을 시도해 보세요. 이 식사는 일일 칼로리 목표에 잘 맞습니다.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
+<span class="material-symbols-outlined text-primary">local_fire_department</span>
+<p class="text-sm font-medium">580 kcal</p>
+</div>
+<div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
+<span class="material-symbols-outlined text-primary">timer</span>
+<p class="text-sm font-medium">35분</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="p-0 @container">
+<div class="flex flex-col items-stretch justify-start rounded-xl shadow-md bg-white dark:bg-background-dark/50">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-t-xl" data-alt="A step-by-step cooking guide for Bibimbap" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCU80UDuPoelmssmCAXOqLKBti49ObOHRJJ8qLObmOi1GEECiNyoLVQPtt7LfUbOrY7B3yF-S09IGJPF8ehAIEgZe1-3ofWTJGqVf-8xZgyFEHKMn5XrhWznuJfSg9qgCr2ZhXQmdl3WU84PhTXTDeQmqgHcMSAGmo4rUNkKrAg4Jh30iPbqwstXUWAs0xxbVPrI3a7ZiJKezjpImLmJUCEgKiMaNXBpLnwpcYjae-KmrmOv8I2qUl9sA08f3GxC2DC8Tj8QpVx_HlZ");'></div>
+<div class="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-4 p-6">
+<div>
+<p class="text-sm font-normal leading-normal text-emerald-700 dark:text-emerald-300">메인 요리</p>
+<p class="text-xl font-bold leading-tight tracking-[-0.015em] text-emerald-950 dark:text-emerald-50">비빔밥</p>
+</div>
+<div class="flex gap-3 flex-wrap">
+<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary/20 dark:bg-primary/30 pl-4 pr-4">
+<p class="text-sm font-medium leading-normal text-emerald-950 dark:text-emerald-50">#매운맛</p>
+</div>
+<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary/20 dark:bg-primary/30 pl-4 pr-4">
+<p class="text-sm font-medium leading-normal text-emerald-950 dark:text-emerald-50">#채식</p>
+</div>
+<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary/20 dark:bg-primary/30 pl-4 pr-4">
+<p class="text-sm font-medium leading-normal text-emerald-950 dark:text-emerald-50">#간편식</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-start sm:items-end gap-3 justify-between">
+<div class="flex flex-col gap-1">
+<p class="text-base font-normal leading-normal text-emerald-700 dark:text-emerald-300">다양한 채소, 양념 고기, 매콤한 고추장 소스를 곁들인 한국의 대표적인 비빔밥입니다. 활기차고 영양가 있는 한 그릇 식사입니다.</p>
+<p class="text-base font-normal leading-normal text-emerald-700 dark:text-emerald-300">평점: 4.5점</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary text-emerald-950 text-sm font-bold leading-normal">
+<span class="truncate">요리 시작하기</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-4 rounded-xl shadow-md p-6 bg-white dark:bg-background-dark/50">
+<h3 class="text-xl font-bold leading-tight tracking-[-0.015em] text-emerald-950 dark:text-emerald-50">영양 정보</h3>
+<div class="relative w-full max-w-xs mx-auto aspect-square">
+<canvas id="nutrition-chart"></canvas>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+<p class="text-3xl font-bold text-primary">580</p>
+<p class="text-sm text-emerald-700 dark:text-emerald-300">총 칼로리</p>
+</div>
+</div>
+<div class="flex justify-around text-center mt-4">
+<div>
+<p class="font-bold text-emerald-950 dark:text-emerald-50">30g</p>
+<p class="text-sm text-emerald-700 dark:text-emerald-300">단백질</p>
+</div>
+<div>
+<p class="font-bold text-emerald-950 dark:text-emerald-50">75g</p>
+<p class="text-sm text-emerald-700 dark:text-emerald-300">탄수화물</p>
+</div>
+<div>
+<p class="font-bold text-emerald-950 dark:text-emerald-50">18g</p>
+<p class="text-sm text-emerald-700 dark:text-emerald-300">지방</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-xl shadow-md p-6 bg-white dark:bg-background-dark/50">
+<h3 class="text-xl font-bold leading-tight tracking-[-0.015em] text-emerald-950 dark:text-emerald-50">칼로리 밸런스</h3>
+<div class="w-full">
+<canvas id="workout-chart"></canvas>
+</div>
+<ul class="space-y-3 mt-4">
+<li class="flex items-center gap-4">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/20 dark:bg-primary/30 text-primary"><span class="material-symbols-outlined">directions_run</span></div>
+<div class="flex-grow">
+<p class="font-medium text-emerald-950 dark:text-emerald-50">30분 조깅</p>
+<p class="text-sm text-emerald-700 dark:text-emerald-300">-250 kcal</p>
+</div>
+</li>
+<li class="flex items-center gap-4">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/20 dark:bg-primary/30 text-primary"><span class="material-symbols-outlined">fitness_center</span></div>
+<div class="flex-grow">
+<p class="font-medium text-emerald-950 dark:text-emerald-50">15분 고강도 인터벌</p>
+<p class="text-sm text-emerald-700 dark:text-emerald-300">-200 kcal</p>
+</div>
+</li>
+<li class="flex items-center gap-4">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/20 dark:bg-primary/30 text-primary"><span class="material-symbols-outlined">self_improvement</span></div>
+<div class="flex-grow">
+<p class="font-medium text-emerald-950 dark:text-emerald-50">10분 스트레칭</p>
+<p class="text-sm text-emerald-700 dark:text-emerald-300">-50 kcal</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        const textColor = isDarkMode ? 'rgb(167 243 208)' : 'rgb(6 78 59)';
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const primaryColor = '#13ec13';
+        // Nutrition Doughnut Chart
+        const nutritionCtx = document.getElementById('nutrition-chart');
+        if (nutritionCtx) {
+            new Chart(nutritionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['단백질', '탄수화물', '지방'],
+                    datasets: [{
+                        label: '영양소',
+                        data: [30, 75, 18],
+                        backgroundColor: [
+                            '#10b981', // emerald-500
+                            '#34d399', // emerald-400
+                            '#6ee7b7'  // emerald-300
+                        ],
+                        borderColor: isDarkMode ? '#102210' : '#f6f8f6',
+                        borderWidth: 4,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + 'g';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        // Workout Bar Chart
+        const workoutCtx = document.getElementById('workout-chart');
+        if (workoutCtx) {
+            new Chart(workoutCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['칼로리'],
+                    datasets: [
+                        {
+                            label: '식사 섭취량',
+                            data: [580],
+                            backgroundColor: primaryColor,
+                            borderColor: primaryColor,
+                            borderWidth: 1,
+                            barPercentage: 0.5,
+                        },
+                        {
+                            label: '운동 소모량',
+                            data: [-500],
+                            backgroundColor: '#fb923c', // orange-400
+                            borderColor: '#fb923c',
+                            borderWidth: 1,
+                            barPercentage: 0.5,
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: { 
+                                color: textColor,
+                                font: {
+                                    family: "'Lexend', 'Noto Sans KR', sans-serif"
+                                }
+                            },
+                             grid: {
+                                color: gridColor,
+                                drawOnChartArea: false,
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                             ticks: { 
+                                display: false
+                            },
+                            grid: {
+                                display: false,
+                            },
+                             border: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                font: {
+                                    family: "'Lexend', 'Noto Sans KR', sans-serif"
+                                },
+                                boxWidth: 12,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += Math.abs(context.parsed.x) + ' kcal';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body></html>

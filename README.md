@@ -1,13 +1,28 @@
-# Korean Recipe & Fitness Advisor
+# Korean Recipe & Fitness Advisor (AI K-Food)
 
 한국 음식 이름을 입력하면 레시피, 영양정보(칼로리), 그리고 해당 칼로리를 소모하기 위한 맞춤형 운동을 추천하는 AI 기반 웹 서비스
 
+## Screenshots
+
+### 종합 대시보드 (Dashboard)
+![Dashboard Screenshot](docs/k-food/종합_페이지_(대시보드_형태)/screen.png)
+
 ## Features
 
-- **레시피 검색**: 한국 음식 레시피 RAG 검색 (공공데이터 기반)
-- **영양정보 제공**: 칼로리, 탄수화물, 단백질, 지방, 나트륨 등
+### Core Features
+- **레시피 검색**: 한국 음식 레시피 RAG 검색 (공공데이터 기반, FAISS 벡터 검색)
+- **영양정보 제공**: 칼로리, 탄수화물, 단백질, 지방, 나트륨 등 상세 영양성분
 - **맞춤 운동 추천**: 사용자 프로필 기반 전문적 칼로리 소모 계산 (Mifflin-St Jeor + MET + EPOC)
-- **GPT Fallback**: DB에 없는 음식은 GPT가 레시피 생성
+- **GPT Fallback**: DB에 없는 음식은 GPT가 레시피 및 영양정보 생성
+
+### UI/UX Features
+- **4페이지 구조**: 레시피 검색 → 영양정보 → 운동추천 → 종합 대시보드
+- **통합 네비게이션**: 모든 페이지에서 일관된 상단 네비게이션 메뉴
+- **다국어 지원 (i18n)**: 한국어/영어 실시간 전환
+- **반응형 디자인**: 모바일/데스크톱 최적화
+- **AI 요약**: GPT 기반 음식별 맞춤 건강 분석 (500자)
+- **영양정보 비교**: 여러 음식 간 영양소 테이블/그래프 비교
+- **Plotly 차트**: 도넛 차트, 수평 바 차트, 비교 그래프
 
 ## Tech Stack
 
@@ -65,8 +80,17 @@ korean-recipe-fitness/
 │   ├── build_vector_db.py        # FAISS 인덱스 빌드
 │   └── build_nutrition_db.py     # SQLite 영양정보 빌드
 ├── streamlit_app/
-│   ├── main.py                   # Streamlit UI
-│   └── components/               # UI 컴포넌트
+│   ├── main.py                   # Streamlit 메인 (홈 리다이렉트)
+│   ├── pages/                    # Multi-page 구조
+│   │   ├── 1_Recipe_Search.py    # 레시피 검색
+│   │   ├── 2_Nutrition_Info.py   # 영양정보 + 비교
+│   │   ├── 3_Workout_Recommendation.py  # 운동 추천
+│   │   └── 4_Dashboard.py        # 종합 대시보드
+│   ├── components/               # UI 컴포넌트
+│   │   ├── top_navigation.py     # 공통 상단 네비게이션
+│   │   └── recipe_card.py        # 레시피 카드
+│   └── utils/
+│       └── i18n.py               # 다국어 지원 (한/영)
 ├── data/
 │   ├── raw/                      # 원본 데이터
 │   ├── processed/                # 정제된 데이터

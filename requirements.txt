@@ -22,6 +22,7 @@ requests>=2.31.0
 
 # Frontend
 streamlit>=1.31.0
+plotly>=5.18.0
 
 # Utilities
 python-dotenv>=1.0.0
@@ -32,3 +33,6 @@ pydantic-settings>=2.1.0
 pytest>=7.4.4
 pytest-asyncio>=0.23.3
 httpx>=0.26.0
+
+# Google Cloud
+google-cloud-aiplatform>=1.38.0

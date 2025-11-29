@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>레시피 검색 및 입력 (언어 토글 추가됨) - AI K-Food</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec13",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102210",
+              "custom-red": "#D9534F",
+              "custom-green": "#5CB85C",
+              "custom-dark-gray": "#212529",
+              "custom-off-white": "#F8F9FA"
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-custom-off-white dark:bg-background-dark font-display text-custom-dark-gray dark:text-gray-200">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-5xl flex-1 px-4 md:px-10">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 py-4 mb-8">
+<div class="flex items-center gap-4 text-custom-dark-gray dark:text-gray-100">
+<div class="size-6 text-custom-red">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-custom-dark-gray dark:text-gray-100 text-xl font-bold leading-tight tracking-[-0.015em]">AI K-Food</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<div class="flex items-center gap-9">
+<a class="text-custom-dark-gray dark:text-gray-300 text-sm font-medium leading-normal hover:text-custom-red dark:hover:text-custom-red transition-colors" href="#">레시피 검색</a>
+<a class="text-custom-dark-gray dark:text-gray-300 text-sm font-medium leading-normal hover:text-custom-red dark:hover:text-custom-red transition-colors" href="#">영양 정보</a>
+<a class="text-custom-dark-gray dark:text-gray-300 text-sm font-medium leading-normal hover:text-custom-red dark:hover:text-custom-red transition-colors" href="#">운동 추천</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-custom-red text-white text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+<span class="truncate">로그인</span>
+</button>
+<div class="relative flex items-center h-10 px-1 bg-gray-200 dark:bg-gray-700 rounded-full">
+<button class="relative z-10 flex items-center justify-center h-8 w-16 text-sm font-bold bg-white dark:bg-custom-dark-gray text-custom-red dark:text-white rounded-full shadow-sm">KO</button>
+<button class="relative z-0 flex items-center justify-center h-8 w-16 text-sm font-medium text-gray-500 dark:text-gray-400">EN</button>
+</div>
+</div>
+</div>
+<button class="md:hidden text-custom-dark-gray dark:text-gray-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<h1 class="text-custom-dark-gray dark:text-gray-100 tracking-light text-3xl md:text-4xl font-bold leading-tight text-center pb-3 pt-6">어떤 한국 음식이 궁금하신가요?</h1>
+<div class="w-full max-w-2xl mx-auto px-4 py-3">
+<div class="flex flex-col sm:flex-row items-center gap-3">
+<label class="flex flex-col min-w-40 h-14 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full shadow-sm">
+<div class="text-gray-500 dark:text-gray-400 flex border border-r-0 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 items-center justify-center pl-4 rounded-l-lg" data-icon="MagnifyingGlass">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-custom-dark-gray dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-custom-red/50 border border-l-0 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 h-full placeholder:text-gray-400 dark:placeholder:text-gray-500 px-4 text-base font-normal leading-normal" placeholder="요리 이름으로 검색해보세요 (예: 불고기, 비빔밥)" value=""/>
+</div>
+</label>
+<button class="flex w-full sm:w-auto min-w-[100px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 bg-custom-red text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+<span class="truncate">검색</span>
+</button>
+</div>
+</div>
+<div class="mt-12">
+<div class="flex flex-col sm:flex-row justify-between items-center px-4 pb-4 pt-5 border-b border-gray-200 dark:border-gray-700 mb-6">
+<h2 class="text-custom-dark-gray dark:text-gray-100 text-[22px] font-bold leading-tight tracking-[-0.015em] mb-3 sm:mb-0">'김치찌개' 검색 결과</h2>
+<div class="relative">
+<select class="form-select appearance-none block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-custom-red focus:border-custom-red rounded-lg">
+<option>최신순</option>
+<option>인기순</option>
+<option>칼로리순</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-400">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-3">
+<div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col group cursor-pointer">
+<div class="overflow-hidden">
+<img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A bubbling red kimchi stew in a black pot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ2FiIuatXqdLiPUvq51MovhQaA2OEwaDW_Qf2YX5RK6iV501JdHF-VvXubXE6cDxSD4YgE4QbvKc6SBUJYaiGCsPVaFu1p90W3H6f2Fc-rWFYus352b-4K_orUTO2Fu7Jn-jVYs9fVDvLGNnBGehG-1J2JKOwQM3scjBnw8OSZr8Q4y34U039KLucB6DfrcXlmhQJSrN2h2SP15pjUWZ2kiIyNOP4gN3sTpnmAYWqJ0fKdqkVnzQNSWMRxQLJs-C3FIcnyxF5HtuF"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="text-lg font-bold text-custom-dark-gray dark:text-gray-100 mb-2">돼지고기 김치찌개</h3>
+<div class="flex-grow space-y-2 text-sm text-gray-600 dark:text-gray-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">local_fire_department</span>
+<span>칼로리: 450kcal</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">timer</span>
+<span>조리 시간: 30분</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">signal_cellular_alt</span>
+<span>난이도: 쉬움</span>
+</div>
+</div>
+<button class="mt-4 w-full text-center bg-custom-red/10 text-custom-red dark:bg-custom-red/20 dark:text-custom-red font-bold py-2 rounded-lg group-hover:bg-custom-red group-hover:text-white transition-colors duration-300">레시피 보기</button>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col group cursor-pointer">
+<div class="overflow-hidden">
+<img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Tuna kimchi stew garnished with green onions" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV7Sp3ycPCYuH-U9ygutZ67SKIx9_vO0y2hQW-GiOphxjF2LzmW6UkL2-YOtgWJ4IyBLOYBv2wrUY78hGGweRz0TGOpBVvYPKiG-Xhtxb-xtpTUG-yh2bn-F_jJbJNqKP32e0VtaNmVmbVI6gjIFJMG8_kxYSHXVIHadpG8UQkYefMYmSmf1VmRUmZb4BIhfqvVEvKGAj5Z_E_wN3jbrsaMczngovddIz0_lRKSf7VAxclCNSienDsf56mEz5RwpdKQOwc25XP7n0u"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="text-lg font-bold text-custom-dark-gray dark:text-gray-100 mb-2">참치 김치찌개</h3>
+<div class="flex-grow space-y-2 text-sm text-gray-600 dark:text-gray-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">local_fire_department</span>
+<span>칼로리: 380kcal</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">timer</span>
+<span>조리 시간: 25분</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">signal_cellular_alt</span>
+<span>난이도: 쉬움</span>
+</div>
+</div>
+<button class="mt-4 w-full text-center bg-custom-red/10 text-custom-red dark:bg-custom-red/20 dark:text-custom-red font-bold py-2 rounded-lg group-hover:bg-custom-red group-hover:text-white transition-colors duration-300">레시피 보기</button>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col group cursor-pointer">
+<div class="overflow-hidden">
+<img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Vegan kimchi stew with tofu and mushrooms" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5J5BeG-BfkfgqtxTeygE1xKzZUXUEjfsu2DfdKGAjT3PafRQ-PgmzPSPNJaj76vPS6CW2WYx46oM281U-rGRup3b9BGmC1nzhRq4mGyc2nZ62aOpIVRS47yv8xJeZBdizIQeCFsT10fUv6zT6lh5ib6Hm4kag0TvIo4_JY8QXyyoiNxdU3qpgljFf893WIYAvZge4DpKW7ukec5jNfWh5KjUEkB6R9l2TPuh9Mzfz4qWHkFLwQ_7bauG4VCpldUryUYZnyT5Sjk14"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<h3 class="text-lg font-bold text-custom-dark-gray dark:text-gray-100 mb-2">두부 김치찌개 (비건)</h3>
+<div class="flex-grow space-y-2 text-sm text-gray-600 dark:text-gray-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">local_fire_department</span>
+<span>칼로리: 320kcal</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">timer</span>
+<span>조리 시간: 35분</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-custom-green text-lg">signal_cellular_alt_1_bar</span>
+<span>난이도: 보통</span>
+</div>
+</div>
+<button class="mt-4 w-full text-center bg-custom-red/10 text-custom-red dark:bg-custom-red/20 dark:text-custom-red font-bold py-2 rounded-lg group-hover:bg-custom-red group-hover:text-white transition-colors duration-300">레시피 보기</button>
+</div>
+</div>
+</div>
+<div class="flex justify-center mt-8">
+<nav aria-label="Pagination" class="flex items-center gap-2">
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:pointer-events-none" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-custom-red text-white font-bold transition-colors">1</button>
+<button class="w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 font-bold transition-colors">2</button>
+<button class="w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 font-bold transition-colors">3</button>
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

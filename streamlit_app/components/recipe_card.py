@@ -43,13 +43,21 @@ def render_recipe_card(recipe: Dict):
 
     st.divider()
 
-    # 이미지 (있는 경우)
-    image_url = recipe.get("image_url", "")
+    # 이미지 (캐싱된 함수 사용)
+    from components.recipe_grid import get_recipe_image
+    from utils.images import get_food_image_url
+
+    food_name = recipe.get("name", "")
+    original_image_url = recipe.get("image_url", "")
+
+    # 캐싱된 함수로 이미지 URL 가져오기 (화면 흔들림 방지)
+    image_url = get_recipe_image(food_name, original_image_url)
+
     if image_url:
         try:
-            st.image(image_url, width=400, caption=recipe.get("name", ""))
+            st.image(image_url, width=400, caption=food_name, use_container_width=True)
         except Exception:
-            pass
+            st.image(get_food_image_url("default"), width=400, caption="이미지를 불러올 수 없습니다")
 
     # 재료
     st.markdown("### 📋 재료")
@@ -84,6 +92,16 @@ def render_recipe_card(recipe: Dict):
         st.divider()
         st.markdown("### 💡 조리 팁")
         st.info(tips)
+
+    # 영양정보 / 운동정보 버튼
+    st.divider()
+    btn_col1, btn_col2 = st.columns(2)
+    with btn_col1:
+        if st.button("📊 영양정보", key="nutrition_btn", type="primary", use_container_width=True):
+            st.switch_page("pages/2_Nutrition_Info.py")
+    with btn_col2:
+        if st.button("🏃 운동정보", key="exercise_btn", type="secondary", use_container_width=True):
+            st.switch_page("pages/3_Workout_Recommendation.py")
 
 
 def render_recipe_card_compact(recipe: Dict):

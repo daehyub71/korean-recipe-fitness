@@ -1,14 +1,28 @@
 [theme]
-primaryColor = "#1E88E5"
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F8F9FA"
-textColor = "#262730"
+# AI K-Food 테마 (빨간색 계열)
+primaryColor = "#dc2626"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f9fafb"
+textColor = "#111827"
 font = "sans serif"
 
 [server]
 headless = true
 enableCORS = false
 enableXsrfProtection = true
+port = 8080
+address = "0.0.0.0"
+maxUploadSize = 10
 
 [browser]
 gatherUsageStats = false
+serverAddress = "0.0.0.0"
+serverPort = 8080
+
+[runner]
+magicEnabled = true
+fastReruns = true
+
+[client]
+showErrorDetails = false
+toolbarMode = "minimal"
